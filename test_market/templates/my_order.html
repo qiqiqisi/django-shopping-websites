@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理 - 每羊小超市</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #ffffff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar h1 {
+            color: #d32f2f; /* 朱红色 */
+            margin: 0;
+        }
+        .navbar a {
+            color: #388e3c; /* 青绿色 */
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        .user-info a {
+            color: #d32f2f; /* 朱红色 */
+            text-decoration: none;
+        }
+        .user-info a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            margin: 2rem auto;
+        }
+        .container h2 {
+            color: #d32f2f; /* 朱红色 */
+            margin-bottom: 1.5rem;
+        }
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .order-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        .order-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .order-info {
+            flex: 1;
+        }
+        .order-info h3 {
+            color: #d32f2f; /* 朱红色 */
+            margin: 0.5rem 0;
+        }
+        .order-info p {
+            color: #388e3c; /* 青绿色 */
+            margin: 0.5rem 0;
+        }
+        .order-status {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .status-button {
+            background-color: #d32f2f; /* 朱红色 */
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .status-button:hover {
+            background-color: #b71c1c; /* 深朱红色 */
+        }
+        .pagination {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .pagination a {
+            background-color: #d32f2f; /* 朱红色 */
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .pagination a:hover {
+            background-color: #b71c1c; /* 深朱红色 */
+        }
+        .pagination span {
+            background-color: #388e3c; /* 青绿色 */
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/home/" class="back-button">返回</a>
+        <h1>每羊小超市</h1>
+        <div class="user-info">
+            <img src="{{ user_avatar.url }}" onclick="window.location.href='/person/'">
+            <a href="/person/">{{ username }}</a>
+            <a href="/store/">我的商店</a>
+            <a href="/cart/">购物车</a>
+        </div>
+    </div>
+    <div class="container">
+        <h2>订单管理</h2>
+        <div class="order-list">
+    {% if orders %}
+        {% for order in orders %}
+            <div class="order-item">
+                {% if order.customer.id != user_id %}
+                    <!-- 卖家身份 -->
+                    <img src="{{ order.customer.avatar.url }}" alt="买家头像">
+                    <div class="order-info">
+                        <h3>买家: {{ order.customer.username }}</h3>
+                        <p>地址: {{ order.customer.address.state }},{{ order.customer.address.city }},{{ order.customer.address.street }}</p>
+                        <p>支付状态: {{ order.get_payment_status_display }}</p>
+                        <img src="{{ order.product.image.url }}" alt="{{ order.product.title }}" onclick="window.location.href='/store/detail/?product_id={{ order.product.id }}'">
+                        <h3>{{ order.product.title }}</h3>
+                        <p>价格: {{ order.product.price }}元</p>
+                        <p>数量: {{ order.quantity }}</p>
+                        <p>时间: {{ order.placed_at }}</p>
+                    </div>
+                    <div class="order-status">
+                        <span>订单状态: {{ order.get_shipping_status_display }}</span>
+
+                        <button class="status-button" onclick="window.location.href='/process_order/?status=NOT&order_id={{ order.id }}'">未发货</button>
+                        <button class="status-button" onclick="window.location.href='/process_order/?status=ING&order_id={{ order.id }}'">已发货</button>
+                        <button class="status-button" onclick="window.location.href='/process_order/?status=DONE&order_id={{ order.id }}'">已签收</button>
+                    </div>
+                {% else %}
+                    <!-- 买家身份 -->
+                    <div class="order-info">
+                        <img src="{{ order.product.image.url }}" alt="{{ order.product.title }}" onclick="window.location.href='/store/detail/?product_id={{ order.product.id }}'">
+                        <h3>{{ order.product.title }}</h3>
+                        <p>价格: {{ order.product.price }}元</p>
+                        <p>数量: {{ order.quantity }}</p>
+                        <p>订单状态: {{ order.get_shipping_status_display }}</p>
+                        <p>时间: {{ order.placed_at }}</p>
+                    {% if order.shipping_status == 'NOT' %}
+                        <a href="/delete_order/?order_id={{ order.id }}">删除</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>暂无订单</p>
+    {% endif %}
+</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<li>
+    <img src="{{ comment.customer.avatar.url }}" alt="用户头像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+    <strong>{{ comment.customer.username }}</strong>
+    <span style="color: #666;">{{ comment.comment_type }}</span>
+    <span style="color: #666;">{{ comment.created_at }}</span>
+    <p>{{ comment.content }}</p>
+    {% if user_id == comment.customer.id %}
+        <a href="/delete_comment/?product_id={{ product.id }}&comment_id={{ comment.id }}" style="color:black ">删除</a>
+        <a href="/reply_comment/?product_id={{ product.id }}&up_comment_id={{ comment.id }}" style="color: black">回复</a>
+        {% else %}
+        <a href="/reply_comment/?product_id={{ product.id }}&up_comment_id={{ comment.id }}" style="color: black">回复</a>
+    {% endif %}
+    {% if comment.replies.all %}
+        <ul>
+            {% for reply in comment.replies.all %}
+                <li class="reply">
+                    <strong>{{ reply.customer.username }}</strong> 回复了 <strong>{{ comment.customer.username }}</strong>
+                    <p>{{ reply.content }}</p>
+                    <span style="color: #666;">{{ reply.created_at }}</span>
+                    {% if user_id == reply.customer.id %}
+                        <a href="/delete_comment/?product_id={{ product.id }}&comment_id={{ reply.id }}" style="color:black ">删除</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>

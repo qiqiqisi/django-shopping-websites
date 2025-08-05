@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付页面</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h1 {
+            color: #368c39; /* 朱红色 */
+            margin-bottom: 1.5rem;
+        }
+        .payee-info {
+            color: #388e3c; /* 青绿色 */
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        input:focus {
+            border-color: #368c39; /* 青绿色 */
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #d32f2f; /* 朱红色 */
+            color: white;
+        }
+        button:hover {
+            background-color: #368c39;
+        }
+        .error-message {
+            color: #368c39;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/transfer/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product_id }}">
+
+            <h1>每羊支付</h1>
+            <div class="payee-info">
+                支付给 {{ object }}
+            </div>
+            <!-- 支付金额 -->
+            <p>支付金额：{{ money }} 元</p>
+            <!-- 支付密码 -->
+            <input type="password"
+                   placeholder="支付密码"
+                   name="password"
+                   required
+                   pattern=".{6,}"
+                   title="请输入6位以上支付密码">
+            <!-- 错误信息 -->
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+            <!-- 提交按钮 -->
+            <button type="submit">立即支付</button>
+        </form>
+    </div>
+</body>
+</html>
