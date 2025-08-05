@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店铺设置 - 每羊小超市</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #ffffff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar h1 {
+            color: #d32f2f; /* 朱红色 */
+            margin: 0;
+        }
+        .navbar a {
+            color: #388e3c; /* 青绿色 */
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+        .container h2 {
+            color: #d32f2f; /* 朱红色 */
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            color: #388e3c; /* 青绿色 */
+            margin-bottom: 0.5rem;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .form-group input[type="file"] {
+            padding: 0.3rem;
+        }
+        .form-group .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-top: 1rem;
+            object-fit: cover;
+            border: 2px solid #d32f2f; /* 朱红色 */
+        }
+        .submit-button {
+            background-color: #d32f2f; /* 朱红色 */
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .submit-button:hover {
+            background-color: #b71c1c; /* 深朱红色 */
+        }
+        .back-link {
+            color: #388e3c; /* 青绿色 */
+            text-decoration: none;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>每羊小超市</h1>
+        <a href="/store/">返回</a>
+    </div>
+    <div class="container">
+        <h2>店铺设置</h2>
+        <form action="/store_set/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="store-name">店铺名字</label>
+                <input type="text" name="store_name" placeholder="请输入店铺名字" required>
+            </div>
+            <div class="form-group">
+                <label for="avatar">上传头像</label>
+                <input type="file" id="avatar" name="avatar" accept="image/*" required>
+                <img id="avatar-preview" class="avatar-preview" src="#" alt="头像预览" style="display: none;">
+            </div>
+            <button type="submit" class="submit-button" name="save">保存设置</button>
+        </form>
+        <a href="/home/" class="back-link">返回首页</a>
+    </div>
+
+    <script>
+        // 实时预览上传的头像
+        const avatarInput = document.getElementById('avatar');
+        const avatarPreview = document.getElementById('avatar-preview');
+
+        avatarInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    avatarPreview.src = e.target.result;
+                    avatarPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

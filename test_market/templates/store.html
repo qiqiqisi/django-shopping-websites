@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的商店 - 每羊小超市</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #ffffff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar h1 {
+            color: #d32f2f; /* 朱红色 */
+            margin: 0;
+        }
+        .navbar a {
+            color: #388e3c; /* 青绿色 */
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        .user-info a {
+            color: #d32f2f; /* 朱红色 */
+            text-decoration: none;
+        }
+        .user-info a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: 2rem auto;
+            text-align: center;
+        }
+        .container h2 {
+            color: #d32f2f; /* 朱红色 */
+            margin-bottom: 1.5rem;
+        }
+        .container a {
+            color: #388e3c; /* 青绿色 */
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        .container a:hover {
+            text-decoration: underline;
+        }
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .product-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 1rem;
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .product-item:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .product-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .product-item h3 {
+            color: #d32f2f; /* 朱红色 */
+            margin: 0.5rem 0;
+        }
+        .product-item p {
+            color: #388e3c; /* 青绿色 */
+            margin: 0.5rem 0;
+        }
+        .upload-button {
+            background-color: #d32f2f; /* 朱红色 */
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .upload-button:hover {
+            background-color: #b71c1c; /* 深朱红色 */
+        }
+        .pagination {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .pagination a {
+            background-color: #d32f2f; /* 朱红色 */
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .pagination a:hover {
+            background-color: #b71c1c; /* 深朱红色 */
+        }
+        .pagination span {
+            background-color: #388e3c; /* 青绿色 */
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/home/" class="back-button">返回</a>
+        <h1>每羊小超市</h1>
+        <div class="user-info">
+            <img src="{{ store_avatar.url }}" onclick="window.location.href='/store_set/'">
+            <a href="/store_set/">{{ store_name }}</a>
+        </div>
+    </div>
+    <div class="container">
+        <h2>我的商店</h2>
+        {% if not store_name %}
+            <p>请先设置商店名字。</p>
+            <a href="/store_set/">前往设置</a>
+        {% else %}
+            {% if page_obj %}
+                <div class="product-list">
+                    {% for product in page_obj %}
+                        <div class="product-item" onclick="window.location.href='/store/detail/?product_id={{ product.id }}'">
+                            <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                            <h3>{{ product.title }}</h3>
+                            <p>价格: {{ product.price }}元</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- 分页导航 -->
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; 首页</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+                    {% endif %}
+
+                    <span>第 {{ page_obj.number }} 页 / 共 {{ paginator.num_pages }} 页</span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                        <a href="?page={{ paginator.num_pages }}">末页 &raquo;</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>您还未上架任何商品。</p>
+            {% endif %}
+            <button class="upload-button" onclick="window.location.href='/store/update_product/'">上传商品</button>
+        {% endif %}
+    </div>
+</body>
+</html>

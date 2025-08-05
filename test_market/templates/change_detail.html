@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 保持原有head部分不变 -->
+    <style>
+        /* 在原样式基础上添加以下表单样式 */
+        .edit-form {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .image-preview {
+            max-width: 200px;
+            margin-top: 1rem;
+        }
+        .category-select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/store/detail/?product_id={{ product.id }}" class="back-button">返回</a>
+        <h1>编辑商品信息</h1>
+
+        <form class="edit-form" method="post" action="/change_detail/" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+
+            <div class="form-group">
+                <label>商品标题</label>
+                <input type="text" class="form-control" name="title" value="{{ product.title }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>商品图片</label>
+                <input type="file" class="form-control" name="image" accept="image/*">
+                {% if product.image %}
+                    <img class="image-preview" src="{{ product.image.url }}" alt="当前图片">
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label>商品描述</label>
+                <textarea class="form-control" name="description" rows="4">{{ product.description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>价格（元）</label>
+                <input type="number" class="form-control" name="price" step="0.01" value="{{ product.price }}" min="0">
+            </div>
+
+            <div class="form-group">
+                <label>库存数量</label>
+                <input type="number" class="form-control" name="inventory" value="{{ product.inventory }}" min="0">
+            </div>
+
+            <div class="form-group">
+                <label>商品分类</label>
+                <input type="text" name="category" value="{{ product.category.title }}">
+            </div>
+
+            <div class="purchase-buttons">
+                <button type="submit" class="button">保存修改</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

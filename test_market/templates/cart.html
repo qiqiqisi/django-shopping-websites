@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的购物车 - 每羊小超市</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #ffffff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar h1 {
+            color: #d32f2f; /* 朱红色 */
+            margin: 0;
+        }
+        .navbar a {
+            color: #388e3c; /* 青绿色 */
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        .user-info a {
+            color: #d32f2f; /* 朱红色 */
+            text-decoration: none;
+        }
+        .user-info a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: 2rem auto;
+            text-align: center;
+        }
+        .container h2 {
+            color: #d32f2f; /* 朱红色 */
+            margin-bottom: 1.5rem;
+        }
+        .container a {
+            color: #388e3c; /* 青绿色 */
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        .container a:hover {
+            text-decoration: underline;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .cart-item-info {
+            flex: 1;
+            margin-left: 1rem;
+        }
+        .cart-item-info h3 {
+            color: #d32f2f; /* 朱红色 */
+            margin: 0.5rem 0;
+        }
+        .cart-item-info p {
+            color: #388e3c; /* 青绿色 */
+            margin: 0.5rem 0;
+        }
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+        .cart-item-actions input[type="number"] {
+            width: 50px;
+            margin: 0 0.5rem;
+        }
+        .cart-item-actions button {
+            background-color: #d32f2f; /* 朱红色 */
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cart-item-actions button:hover {
+            background-color: #b71c1c; /* 深朱红色 */
+        }
+        .cart-summary {
+            margin-top: 2rem;
+            text-align: right;
+        }
+        .cart-summary h3 {
+            color: #d32f2f; /* 朱红色 */
+        }
+        .cart-summary p {
+            color: #388e3c; /* 青绿色 */
+        }
+        .clear-cart-button {
+            background-color: #d32f2f; /* 朱红色 */
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .clear-cart-button:hover {
+            background-color: #b71c1c; /* 深朱红色 */
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/home/" class="back-button">返回</a>
+        <h1>每羊小超市</h1>
+
+        <div class="user-info">
+            <img src="{{ user_avatar.url }}" onclick="window.location.href='/person/'">
+            <a href="/person/">{{ username }}</a>
+            <a href="/store/">我的商店</a>
+            <a href="/my_order/">我的订单</a>
+        </div>
+    </div>
+    <div class="container">
+        <h2>我的购物车</h2>
+        {% if cart_items %}
+            <div class="cart-list">
+                {% for item in cart_items %}
+                    <div class="cart-item">
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}">
+                        <div class="cart-item-info">
+                            <h3>{{ item.product.title }}</h3>
+                            <p>单价: {{ item.product.price }}元</p>
+                        </div>
+                        <div class="cart-item-actions">
+                            <form action="/change_cart/" method="get">
+                                <input type="number" min="1" value="{{ item.quantity }}" name="quantity">
+                                <input type="hidden" value="{{ item.product.id }}" name="product_id">
+                                <button  onclick="window.location.href='/change_cart/'">修改</button>
+                            </form>
+                            <div style="width: 20px;"></div>
+                            <form action="/remove_cart/" method="get">
+                                <input type="hidden" value="{{ item.product.id }}" name="product_id">
+                                <button  onclick="window.location.href='/remove_cart/'">删除</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="cart-summary">
+                <h3>总计: {{ total }}元</h3>
+                <button class="clear-cart-button" onclick="window.location.href='/clear_cart/'">清空购物车</button>
+
+                <form action="/checkout/" method="post">
+                {% csrf_token %}
+                    {% if error %}
+                        <p style="color: red">{{ error }}</p>
+                    {% endif %}
+                <input type="password" name="payment_password" placeholder="输入支付密码">
+                <button type="submit" class="clear-cart-button">结算</button>
+                </form>
+
+            </div>
+        {% else %}
+            <p>购物车为空，快去<a href="/home/">选购商品</a>吧！</p>
+        {% endif %}
+    </div>
+</body>
+</html>
