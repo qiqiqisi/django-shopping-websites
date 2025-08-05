@@ -80,8 +80,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'market',
-        'USER': 'root',
-        'PASSWORD': 'MYsql133828.',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
@@ -137,13 +137,14 @@ INTERNAL_IPS = ['127.0.0.1']#add for debug
 # settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.qq.com'
-EMAIL_PORT = 587  # 通常使用587端口与TLS加密一起使用
-EMAIL_USE_TLS = True  # 启用TLS加密
-EMAIL_HOST_USER = 'wuzihandacongming@qq.com'  # 你的QQ邮箱地址
-EMAIL_HOST_PASSWORD = 'cdfvppfjhrztbfgj'  # 你刚才获取的QQ邮箱授权码
-DEFAULT_FROM_EMAIL = 'wuzihandacongming@qq.com'  # 发件人邮箱，通常设置为与EMAIL_HOST_USER相同
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+DEFAULT_FROM_EMAIL = ''
 
 
 # avatar set
-MEDIA_URL = '/media/'  # 访问媒体文件的 URL 前缀
-MEDIA_ROOT = BASE_DIR / 'media'  # 媒体文件的实际存储路径
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
