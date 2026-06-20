@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.title }} - 每羊小超市{% endblock %}
+
+{% block content %}
+<section class="split">
+    <div class="panel" style="padding:16px;">
+        {% if product.image %}
+            <img class="detail-image" src="{{ product.image.url }}" alt="{{ product.title }}">
+        {% else %}
+            <div class="detail-image product-placeholder">暂无图片</div>
+        {% endif %}
+    </div>
+    <div class="summary">
+        <p class="eyebrow">{{ product.category.title }}</p>
+        <h1>{{ product.title }}</h1>
+        <p class="muted">{{ product.description }}</p>
+        <div class="stat-strip" style="margin:20px 0;">
+            <div class="stat"><strong>￥{{ product.price }}</strong><span class="muted">价格</span></div>
+            <div class="stat"><strong>{{ product.inventory }}</strong><span class="muted">库存</span></div>
+            <div class="stat"><strong>{{ product.sale }}</strong><span class="muted">销量</span></div>
+        </div>
+        <div class="line-item" style="grid-template-columns:56px 1fr; box-shadow:none;">
+            <img style="width:56px;height:56px;" src="{{ seller.avatar.url }}" alt="{{ seller.shop_name }}">
+            <div>
+                <strong>{{ seller.shop_name }}</strong>
+                <p class="muted" style="margin:4px 0 0;">店铺卖家</p>
+            </div>
+        </div>
+        <div class="actions" style="margin-top:18px;">
+            {% if is_owner %}
+                <a class="btn" href="{% url 'change_detail' %}?product_id={{ product.id }}">修改商品信息</a>
+            {% elif can_purchase %}
+                <a class="btn secondary" href="{% url 'add_cart' %}?product_id={{ product.id }}">加入购物车</a>
+                <a class="btn" href="{% url 'transfer' %}?product_id={{ product.id }}">立即购买</a>
+            {% else %}
+                <span class="muted">登录后可购买，售罄商品暂不可下单。</span>
+            {% endif %}
+            <a class="btn secondary" href="{% url 'home' %}">返回首页</a>
+        </div>
+    </div>
+</section>
+
+<section class="panel" style="padding:24px;margin-top:24px;">
+    <div class="section-head" style="margin-top:0;">
+        <div>
+            <p class="eyebrow">Reviews</p>
+            <h2>用户评论</h2>
+        </div>
+    </div>
+
+    {% if comments %}
+        <ul class="comment-list">
+            {% for comment in comments %}
+                {% include "comment_item.html" with comment=comment %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="empty-state">暂时还没有评论。</div>
+    {% endif %}
+
+    {% if current_customer %}
+        <form class="form-stack" style="margin-top:20px;" method="post" action="{% url 'add_comment' %}?product_id={{ product.id }}">
+            {% csrf_token %}
+            {% if up_user %}
+                <div class="message">正在回复 <strong>{{ up_user }}</strong>：{{ up_content }}</div>
+                <input type="hidden" name="up_comment_id" value="{{ up_comment_id }}">
+            {% endif %}
+            <div class="field">
+                <label for="content">写下你的评论</label>
+                <textarea id="content" name="content" placeholder="分享商品体验或回复评论"></textarea>
+            </div>
+            <button type="submit">提交评论</button>
+        </form>
+    {% endif %}
+</section>
+{% endblock %}

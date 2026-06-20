@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}订单管理 - 每羊小超市{% endblock %}
+
+{% block content %}
+<div class="section-head">
+    <div>
+        <p class="eyebrow">Orders</p>
+        <h1>订单管理</h1>
+        <p class="muted">这里会同时显示你作为买家和卖家的订单。</p>
+    </div>
+    <a class="btn secondary" href="{% url 'home' %}">返回首页</a>
+</div>
+
+{% if page_obj %}
+    <section class="order-list">
+        {% for order in page_obj %}
+            <article class="order-item">
+                {% if order.product.image %}
+                    <a href="{% url 'detail' %}?product_id={{ order.product.id }}">
+                        <img src="{{ order.product.image.url }}" alt="{{ order.product.title }}">
+                    </a>
+                {% else %}
+                    <div class="product-placeholder">暂无图片</div>
+                {% endif %}
+
+                <div>
+                    {% if order.customer_id != user_id %}
+                        <p class="eyebrow">卖家视角</p>
+                        <h3>买家：{{ order.customer.username }}</h3>
+                        <p class="muted">地址：{{ order.address.state }} {{ order.address.city }} {{ order.address.street }}</p>
+                    {% else %}
+                        <p class="eyebrow">买家视角</p>
+                        <h3>{{ order.product.title }}</h3>
+                        <p class="muted">店铺：{{ order.seller.shop_name }}</p>
+                    {% endif %}
+                    <p>数量：{{ order.quantity }}，总价：￥{{ order.total_price }}</p>
+                    <p>支付：{{ order.get_payment_status_display }}，配送：{{ order.get_shipping_status_display }}</p>
+                    <p class="muted">下单时间：{{ order.placed_at|date:"Y-m-d H:i" }}</p>
+                </div>
+
+                <div class="actions">
+                    {% if order.customer_id != user_id %}
+                        <a class="btn secondary" href="{% url 'process_order' %}?status=NOT&order_id={{ order.id }}">未发货</a>
+                        <a class="btn secondary" href="{% url 'process_order' %}?status=ING&order_id={{ order.id }}">已发货</a>
+                        <a class="btn" href="{% url 'process_order' %}?status=DONE&order_id={{ order.id }}">已签收</a>
+                    {% elif order.shipping_status == 'NOT' %}
+                        <a class="btn danger" href="{% url 'delete_order' %}?order_id={{ order.id }}">删除订单</a>
+                    {% endif %}
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+    {% include "partials/pagination.html" %}
+{% else %}
+    <div class="empty-state">暂无订单。</div>
+{% endif %}
+{% endblock %}

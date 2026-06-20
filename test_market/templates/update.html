@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}找回账号 - 每羊小超市{% endblock %}
+{% block nav %}{% endblock %}
+{% block main_class %}auth-page{% endblock %}
+
+{% block content %}
+<section class="auth-card">
+    <p class="eyebrow">Account Recovery</p>
+    <h1>重设用户名和密码</h1>
+    <p class="muted">邮箱验证通过后即可更新账号信息。</p>
+    <form class="form-stack" action="{% url 'update' %}" method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label for="username">新用户名</label>
+            <input id="username" type="text" name="username" value="{{ username }}" required>
+        </div>
+        <div class="field">
+            <label for="password">新密码</label>
+            <input id="password" type="password" name="password" value="{{ password }}" required>
+        </div>
+        <div class="field">
+            <label for="email">注册邮箱</label>
+            <input id="email" type="email" name="email" value="{{ email }}" required>
+        </div>
+        <div class="field">
+            <label for="verification_code">验证码</label>
+            <div class="actions">
+                <input id="verification_code" type="text" name="verification_code" placeholder="6 位验证码">
+                <button class="btn secondary" type="submit" name="send-code">发送验证码</button>
+            </div>
+        </div>
+        <button type="submit" name="update">确认修改</button>
+    </form>
+    <p class="muted" style="margin-top:16px;"><a href="{% url 'login' %}">返回登录</a></p>
+</section>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}个人中心 - 每羊小超市{% endblock %}
+
+{% block content %}
+<div class="section-head">
+    <div>
+        <p class="eyebrow">Profile</p>
+        <h1>个人中心</h1>
+        <p class="muted">头像、收货地址和基础信息都会用于下单与订单展示。</p>
+    </div>
+    <div class="actions">
+        <a class="btn secondary" href="{% url 'update' %}">修改密码</a>
+        <a class="btn danger" href="{% url 'logout' %}">退出登录</a>
+    </div>
+</div>
+
+<section class="panel" style="padding:24px;">
+    <form class="form-stack" action="{% url 'person' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="actions">
+            <img class="profile-avatar" src="{{ user_avatar.url }}" alt="{{ username }}">
+            <div class="field" style="min-width:240px;">
+                <label for="avatar-upload">上传新头像</label>
+                <input type="file" id="avatar-upload" name="avatar" accept="image/*">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="field">
+                <label>邮箱</label>
+                <input type="email" value="{{ user_email }}" disabled>
+            </div>
+            <div class="field">
+                <label for="gender">性别</label>
+                <select id="gender" name="gender">
+                    <option value="M" {% if user_gender == 'M' %}selected{% endif %}>男</option>
+                    <option value="F" {% if user_gender == 'F' %}selected{% endif %}>女</option>
+                    <option value="N" {% if user_gender == 'N' %}selected{% endif %}>未知</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="birth_date">出生日期</label>
+                <input type="date" id="birth_date" name="birth_date" value="{{ user_birth_date|date:'Y-m-d' }}">
+            </div>
+        </div>
+
+        <h2>收货地址</h2>
+        <div class="form-grid">
+            <div class="field">
+                <label for="state">国家或地区</label>
+                <input id="state" type="text" name="state" placeholder="国家或地区" value="{{ state }}">
+            </div>
+            <div class="field">
+                <label for="city">城市</label>
+                <input id="city" type="text" name="city" placeholder="城市" value="{{ city }}">
+            </div>
+            <div class="field">
+                <label for="street">街道</label>
+                <input id="street" type="text" name="street" placeholder="街道、门牌号" value="{{ street }}">
+            </div>
+        </div>
+
+        <button type="submit">保存资料</button>
+    </form>
+</section>
+{% endblock %}

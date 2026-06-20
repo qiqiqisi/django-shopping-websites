@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}每羊小超市{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    {% block nav %}
+        <header class="topbar">
+            <a class="brand" href="{% if current_customer %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}">
+                <span class="brand-mark">羊</span>
+                <span>每羊小超市</span>
+            </a>
+            {% if current_customer %}
+                <form class="top-search" action="{% url 'search' %}" method="get">
+                    <input type="text" name="query" value="{{ query }}" placeholder="搜索商品、分类或店铺">
+                    <button type="submit">搜索</button>
+                </form>
+                <nav class="nav-links">
+                    <a href="{% url 'store' %}">我的商店</a>
+                    <a href="{% url 'cart' %}">购物车</a>
+                    <a href="{% url 'my_order' %}">订单</a>
+                    <a class="avatar-link" href="{% url 'person' %}">
+                        <img src="{{ current_customer.avatar.url }}" alt="{{ current_customer.username }}">
+                        <span>{{ current_customer.username }}</span>
+                    </a>
+                </nav>
+            {% else %}
+                <div></div>
+                <nav class="nav-links">
+                    <a href="{% url 'login' %}">登录</a>
+                    <a class="btn" href="{% url 'register' %}">注册</a>
+                </nav>
+            {% endif %}
+        </header>
+    {% endblock %}
+
+    <main class="{% block main_class %}page{% endblock %}">
+        {% include "partials/messages.html" %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

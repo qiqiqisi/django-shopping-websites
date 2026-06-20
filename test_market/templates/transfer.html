@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}支付 - 每羊小超市{% endblock %}
+
+{% block content %}
+<section class="auth-card" style="margin:40px auto;">
+    <p class="eyebrow">May Sheep Pay</p>
+    <h1>确认支付</h1>
+    <p class="muted">支付给 {{ payee_name }}</p>
+    <div class="stat" style="margin:18px 0;">
+        <strong>￥{{ money }}</strong>
+        <span class="muted">本次支付金额</span>
+    </div>
+    <form class="form-stack" action="{% url 'transfer' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product_id }}">
+        <div class="field">
+            <label for="password">支付密码</label>
+            <input id="password" type="password" placeholder="默认演示密码 999999" name="password" required>
+        </div>
+        {% if error %}
+            <div class="message error">{{ error }}</div>
+        {% endif %}
+        <button type="submit">立即支付</button>
+        <a class="btn secondary" href="{% url 'detail' %}?product_id={{ product_id }}">返回商品</a>
+    </form>
+</section>
+{% endblock %}

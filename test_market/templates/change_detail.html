@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}编辑商品 - 每羊小超市{% endblock %}
+
+{% block content %}
+<div class="section-head">
+    <div>
+        <p class="eyebrow">Edit Product</p>
+        <h1>编辑商品信息</h1>
+    </div>
+    <a class="btn secondary" href="{% url 'detail' %}?product_id={{ product.id }}">返回商品</a>
+</div>
+
+<section class="panel" style="padding:24px;">
+    <form class="form-stack" method="post" action="{% url 'change_detail' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <div class="form-grid">
+            <div class="field">
+                <label for="title">商品标题</label>
+                <input id="title" type="text" name="title" value="{{ product.title }}" required>
+            </div>
+            <div class="field">
+                <label for="category">商品分类</label>
+                <input id="category" type="text" name="category" value="{{ product.category.title }}" required>
+            </div>
+            <div class="field">
+                <label for="price">价格（元）</label>
+                <input id="price" type="number" name="price" step="0.01" value="{{ product.price }}" min="0" required>
+            </div>
+            <div class="field">
+                <label for="inventory">库存数量</label>
+                <input id="inventory" type="number" name="inventory" value="{{ product.inventory }}" min="0" required>
+            </div>
+        </div>
+        <div class="field">
+            <label for="description">商品描述</label>
+            <textarea id="description" name="description">{{ product.description }}</textarea>
+        </div>
+        <div class="field">
+            <label for="image">更换商品图片</label>
+            <input id="image" type="file" name="image" accept="image/*">
+        </div>
+        <button type="submit">保存修改</button>
+    </form>
+</section>
+{% endblock %}

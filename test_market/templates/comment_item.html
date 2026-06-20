@@ -1,0 +1,36 @@
+<li class="comment-item">
+    <div class="comment-meta">
+        <span class="comment-author">
+            {% if comment.customer and comment.customer.avatar %}
+                <img class="avatar" src="{{ comment.customer.avatar.url }}" alt="{{ comment.customer.username }}">
+            {% endif %}
+            {{ comment.customer.username|default:"已注销用户" }}
+        </span>
+        <span>{{ comment.get_comment_type_display }}</span>
+        <span>{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+    </div>
+    <p style="margin:12px 0;">{{ comment.content }}</p>
+    <div class="actions">
+        <a class="btn secondary" href="{% url 'reply_comment' %}?product_id={{ product.id }}&up_comment_id={{ comment.id }}">回复</a>
+        {% if user_id == comment.customer_id or is_owner %}
+            <a class="btn danger" href="{% url 'delete_comment' %}?product_id={{ product.id }}&comment_id={{ comment.id }}">删除</a>
+        {% endif %}
+    </div>
+    {% if comment.replies.all %}
+        <ul class="reply-list">
+            {% for reply in comment.replies.all %}
+                <li class="comment-item">
+                    <div class="comment-meta">
+                        <strong>{{ reply.customer.username|default:"已注销用户" }}</strong>
+                        <span>回复 {{ comment.customer.username|default:"已注销用户" }}</span>
+                        <span>{{ reply.created_at|date:"Y-m-d H:i" }}</span>
+                    </div>
+                    <p style="margin:12px 0;">{{ reply.content }}</p>
+                    {% if user_id == reply.customer_id or is_owner %}
+                        <a class="btn danger" href="{% url 'delete_comment' %}?product_id={{ product.id }}&comment_id={{ reply.id }}">删除</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}店铺设置 - 每羊小超市{% endblock %}
+
+{% block content %}
+<div class="section-head">
+    <div>
+        <p class="eyebrow">Store Settings</p>
+        <h1>店铺设置</h1>
+        <p class="muted">统一的店铺名称和头像会显示在商品详情与订单中。</p>
+    </div>
+    <a class="btn secondary" href="{% url 'store' %}">返回店铺</a>
+</div>
+
+<section class="panel" style="padding:24px;">
+    <form class="form-stack" action="{% url 'store_set' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="actions">
+            <img class="store-avatar-large" src="{{ seller.avatar.url }}" alt="{{ seller.shop_name }}">
+            <div class="field" style="min-width:260px;">
+                <label for="avatar">店铺头像</label>
+                <input type="file" id="avatar" name="avatar" accept="image/*">
+            </div>
+        </div>
+        <div class="field">
+            <label for="store-name">店铺名字</label>
+            <input id="store-name" type="text" name="store_name" value="{{ seller.shop_name }}" required>
+        </div>
+        <button type="submit" name="save">保存设置</button>
+    </form>
+</section>
+{% endblock %}

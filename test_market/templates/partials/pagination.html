@@ -1,0 +1,13 @@
+{% if page_obj and paginator.num_pages > 1 %}
+    <nav class="pagination">
+        {% if page_obj.has_previous %}
+            <a class="btn secondary" href="?page=1{% if query %}&query={{ query|urlencode }}{% endif %}">首页</a>
+            <a class="btn secondary" href="?page={{ page_obj.previous_page_number }}{% if query %}&query={{ query|urlencode }}{% endif %}">上一页</a>
+        {% endif %}
+        <span>第 {{ page_obj.number }} 页 / 共 {{ paginator.num_pages }} 页</span>
+        {% if page_obj.has_next %}
+            <a class="btn secondary" href="?page={{ page_obj.next_page_number }}{% if query %}&query={{ query|urlencode }}{% endif %}">下一页</a>
+            <a class="btn secondary" href="?page={{ paginator.num_pages }}{% if query %}&query={{ query|urlencode }}{% endif %}">末页</a>
+        {% endif %}
+    </nav>
+{% endif %}

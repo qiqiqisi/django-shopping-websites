@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}登录 - 每羊小超市{% endblock %}
+{% block nav %}{% endblock %}
+{% block main_class %}auth-page{% endblock %}
+
+{% block content %}
+<section class="auth-card">
+    <p class="eyebrow">May Sheep Market</p>
+    <h1>欢迎回来</h1>
+    <p class="muted">登录后即可浏览商品、管理店铺和处理订单。</p>
+    <form class="form-stack" action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label for="username">用户名</label>
+            <input id="username" type="text" name="username" required>
+        </div>
+        <div class="field">
+            <label for="password">密码</label>
+            <input id="password" type="password" name="password" required>
+        </div>
+        <button type="submit">登录</button>
+    </form>
+    <p class="muted" style="margin-top:16px;">
+        没有账号？<a href="{% url 'register' %}">立即注册</a>
+        <br>
+        忘记密码？<a href="{% url 'update' %}">找回账号</a>
+    </p>
+</section>
+{% endblock %}

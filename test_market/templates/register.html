@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}注册 - 每羊小超市{% endblock %}
+{% block nav %}{% endblock %}
+{% block main_class %}auth-page{% endblock %}
+
+{% block content %}
+<section class="auth-card">
+    <p class="eyebrow">Create Account</p>
+    <h1>创建你的市场账号</h1>
+    <p class="muted">开发模式下验证码会直接显示在页面上，方便快速体验。</p>
+    <form class="form-stack" action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label for="username">用户名</label>
+            <input id="username" type="text" name="username" value="{{ username }}" required>
+        </div>
+        <div class="field">
+            <label for="password">密码</label>
+            <input id="password" type="password" name="password" value="{{ password }}" required>
+        </div>
+        <div class="field">
+            <label for="email">邮箱</label>
+            <input id="email" type="email" name="email" value="{{ email }}" required>
+        </div>
+        <div class="field">
+            <label for="verification_code">验证码</label>
+            <div class="actions">
+                <input id="verification_code" type="text" name="verification_code" placeholder="6 位验证码">
+                <button class="btn secondary" type="submit" name="send_code">发送验证码</button>
+            </div>
+        </div>
+        <button type="submit" name="register">注册</button>
+    </form>
+    <p class="muted" style="margin-top:16px;">已有账号？<a href="{% url 'login' %}">立即登录</a></p>
+</section>
+{% endblock %}

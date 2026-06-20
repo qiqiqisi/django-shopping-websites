@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}购物车 - 每羊小超市{% endblock %}
+
+{% block content %}
+<div class="section-head">
+    <div>
+        <p class="eyebrow">Cart</p>
+        <h1>我的购物车</h1>
+    </div>
+    <a class="btn secondary" href="{% url 'home' %}">继续选购</a>
+</div>
+
+{% if error %}
+    <div class="message error">{{ error }}</div>
+{% endif %}
+
+{% if cart_items %}
+    <section class="split">
+        <div class="cart-list">
+            {% for item in cart_items %}
+                <article class="line-item">
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}">
+                    {% else %}
+                        <div class="product-placeholder">暂无图片</div>
+                    {% endif %}
+                    <div>
+                        <h3>{{ item.product.title }}</h3>
+                        <p class="muted">单价 ￥{{ item.product.price }}，库存 {{ item.product.inventory }}</p>
+                        <p class="price">小计 ￥{{ item.subtotal }}</p>
+                    </div>
+                    <div class="actions">
+                        <form class="actions" action="{% url 'change_cart' %}" method="get">
+                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                            <input style="width:90px;" type="number" min="1" max="{{ item.product.inventory }}" value="{{ item.quantity }}" name="quantity">
+                            <button class="btn secondary" type="submit">修改</button>
+                        </form>
+                        <a class="btn danger" href="{% url 'remove_cart' %}?product_id={{ item.product.id }}">删除</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+        <aside class="summary">
+            <h2>合计 ￥{{ total }}</h2>
+            <p class="muted">默认演示支付密码为 999999。正式部署前请改成真实支付流程。</p>
+            <form class="form-stack" action="{% url 'checkout' %}" method="post">
+                {% csrf_token %}
+                <div class="field">
+                    <label for="payment_password">支付密码</label>
+                    <input id="payment_password" type="password" name="payment_password" placeholder="请输入 6 位支付密码" required>
+                </div>
+                <button type="submit">结算</button>
+                <a class="btn secondary" href="{% url 'clear_cart' %}">清空购物车</a>
+            </form>
+        </aside>
+    </section>
+{% else %}
+    <div class="empty-state">购物车是空的，去首页挑几件商品吧。</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 每羊小超市{% endblock %}
+
+{% block content %}
+<section class="hero-panel">
+    <div>
+        <p class="eyebrow">精选市集</p>
+        <h1>把小店、好物和订单放进一个清爽的 Django 商城。</h1>
+        <p class="muted">浏览商品、加入购物车、立即购买，卖家也可以直接在自己的店铺里发布和管理商品。</p>
+        <div class="actions">
+            <a class="btn" href="{% url 'store' %}">管理我的商店</a>
+            <a class="btn secondary" href="{% url 'cart' %}">查看购物车</a>
+        </div>
+    </div>
+    <div class="stat-strip">
+        <div class="stat"><strong>{{ featured_count }}</strong><span class="muted">在售商品</span></div>
+        <div class="stat"><strong>6</strong><span class="muted">位默认支付密码</span></div>
+        <div class="stat"><strong>SQLite</strong><span class="muted">开箱即用</span></div>
+    </div>
+</section>
+
+<div class="section-head">
+    <div>
+        <h2>{% if query %}“{{ query }}”的搜索结果{% else %}热门商品{% endif %}</h2>
+        <p class="muted">按销量和更新时间排序。</p>
+    </div>
+</div>
+
+{% if page_obj %}
+    <section class="product-grid">
+        {% for product in page_obj %}
+            {% include "partials/product_card.html" with product=product %}
+        {% empty %}
+            <div class="empty-state">暂无商品，稍后再来看看。</div>
+        {% endfor %}
+    </section>
+    {% include "partials/pagination.html" %}
+{% else %}
+    <div class="empty-state">暂无商品，稍后再来看看。</div>
+{% endif %}
+{% endblock %}

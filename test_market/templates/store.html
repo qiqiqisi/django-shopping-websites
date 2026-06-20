@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}我的商店 - 每羊小超市{% endblock %}
+
+{% block content %}
+<section class="hero-panel">
+    <div>
+        <p class="eyebrow">Store Studio</p>
+        <h1>{{ store_name }}</h1>
+        <p class="muted">维护店铺形象、上架商品，并在订单页处理发货状态。</p>
+        <div class="actions">
+            <a class="btn" href="{% url 'update_product' %}">上传商品</a>
+            <a class="btn secondary" href="{% url 'store_set' %}">店铺设置</a>
+            <a class="btn secondary" href="{% url 'home' %}">返回首页</a>
+        </div>
+    </div>
+    <div class="summary">
+        <img class="store-avatar-large" src="{{ store_avatar.url }}" alt="{{ store_name }}">
+        <h3 style="margin-top:16px;">{{ store_name }}</h3>
+        <p class="muted">当前共有 {{ paginator.count }} 件商品。</p>
+    </div>
+</section>
+
+<div class="section-head">
+    <h2>店铺商品</h2>
+</div>
+
+{% if page_obj %}
+    <section class="product-grid">
+        {% for product in page_obj %}
+            {% include "partials/product_card.html" with product=product %}
+        {% empty %}
+            <div class="empty-state">还没有上架商品。</div>
+        {% endfor %}
+    </section>
+    {% include "partials/pagination.html" %}
+{% else %}
+    <div class="empty-state">还没有上架商品，先发布第一件吧。</div>
+{% endif %}
+{% endblock %}

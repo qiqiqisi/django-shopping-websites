@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+db.sqlite3
+.env
+.venv/
+venv/
+env/
+staticfiles/
+.DS_Store
+packages/
+.codex_remote_repo/
+.codex_remote_repo_upload/
+
+# Keep the sample media already in this project if you want demo images on GitHub.
+# For a real deployment, user-uploaded media should normally live outside Git.

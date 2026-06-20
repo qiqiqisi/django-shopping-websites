@@ -1,0 +1,19 @@
+<a class="product-card" href="{% url 'detail' %}?product_id={{ product.id }}">
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+    {% else %}
+        <div class="product-placeholder">暂无图片</div>
+    {% endif %}
+    <div>
+        <h3>{{ product.title }}</h3>
+        <p class="muted">{{ product.description|truncatechars:56 }}</p>
+    </div>
+    <div class="product-meta">
+        <span>{{ product.category.title }}</span>
+        <span>库存 {{ product.inventory }}</span>
+    </div>
+    <div class="product-meta">
+        <span class="price">￥{{ product.price }}</span>
+        <span>销量 {{ product.sale }}</span>
+    </div>
+</a>
