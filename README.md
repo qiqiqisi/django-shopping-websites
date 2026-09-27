@@ -57,7 +57,7 @@ GitHub Pages 只能托管静态文件，不能运行 Django、SQLite 或 MySQL�
 - 浏览器存储没有 Django 后端的并发事务、服务端权限校验和安全保障，不能用于真实电商业务。
 - 如需多人共享数据、跨设备登录和正式支付，请部署 `test_market/` 中的 Django 服务并使用 SQLite/MySQL 或独立后端服务。
 
-在线版源码位于 `web/`，由 `.github/workflows/deploy-pages.yml` 自动发布到 GitHub Pages。
+在线版源码位于 `web/`，发布产物位于 `gh-pages` 分支，并由 GitHub Pages 自动部署。
 
 ## 功能一览
 
